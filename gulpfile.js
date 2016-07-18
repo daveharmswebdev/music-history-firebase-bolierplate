@@ -17,12 +17,19 @@ var customOpts = {
   entries: ['./javascripts/main.js'],
   debug: true
 };
-var opts = assign({}, watchify.args, customOpts);
+var opts = Object.assign({}, watchify.args, customOpts);
 var b = watchify(browserify(opts));
+
+function bundle() {
+  return b.bundle()
+  // log errors if they happen
+  .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+  .pipe(source('bundle.js'))
+  .pipe(gulp.dest('./dist'));
+}
 
 gulp.task('bundle', bundle);
 
-gulp.task('default', ['bundle', 'lint', 'sassify', 'watch']);
 
 gulp.task('lint', function() {
   return gulp.src('./javascripts/**/*.js')
@@ -47,10 +54,4 @@ var onError = function ( err ) {
   this.emit( 'end' );
 };
 
-function bundle() {
-  return b.bundle()
-    // log errors if they happen
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest('./dist'));
-}
+gulp.task('default', ['lint', 'sassify', 'watch'], bundle);
