@@ -21,6 +21,29 @@ let $ = require('jquery');
       });
     }
 
+    // function getSongsAjax(callback, userId) {
+    //   return new Promise(function(resolve, reject) {
+    //     $.ajax({
+    //       url: `https://music-history-7af37.firebaseio.com/song.json?orderBy=uid&equalTo=${userId}`
+    //     }).done(function(songData) {
+    //       resolve(songData);
+    //     });
+    //   });
+    // }
+
+    function addSongAjax(songFormObj) {
+      return new Promise(function(resolve, reject) {
+        $.ajax({
+          url: 'https://music-history-7af37.firebaseio.com/songs.json',
+          type: "POST",
+          data: JSON.stringify(songFormObj),
+          dataType: 'JSON'
+        }).done(function(songId) {
+          resolve(songId);
+        });
+      });
+    }
+
     function addSong(newSong) {
       return firebase.database().ref('songs').push(newSong);
     }
@@ -44,6 +67,7 @@ let $ = require('jquery');
 
     module.exports = {
       getSongs,
+      getSongsAjax,
       addSong,
       getSong,
       deleteSong,
@@ -56,28 +80,7 @@ let $ = require('jquery');
 // DB interaction using Firebase REST API
 // ****************************************
 
-// function getSongs(callback) {
-//   return new Promise(function(resolve, reject) {
-//     $.ajax({
-//       url: "https://music-history-7af37.firebaseio.com/song.json"
-//     }).done(function(songData) {
-//       resolve(songData);
-//     });
-//   });
-// }
 //
-// function addSong(songFormObj) {
-//   return new Promise(function(resolve, reject) {
-//     $.ajax({
-//       url: 'https://music-history-7af37.firebaseio.com/song.json',
-//       type: "POST",
-//       data: JSON.stringify(songFormObj),
-//       dataType: 'JSON'
-//     }).done(function(songId) {
-//       resolve(songId);
-//     });
-//   });
-// }
 //
 // function deleteSong(songId) {
 //   return new Promise(function(resolve, reject) {
